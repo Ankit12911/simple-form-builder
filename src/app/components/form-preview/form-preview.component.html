@@ -1,0 +1,40 @@
+<mat-card>
+  <h2>Live Form Preview</h2>
+  <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()">
+    <div *ngFor="let field of formFields">
+      <!-- Text/textarea -->
+      <mat-form-field appearance="fill" class="full-width" *ngIf="field.type === 'text' || field.type === 'textarea'">
+        <mat-label>{{ field.label }}</mat-label>
+        <textarea *ngIf="field.type === 'textarea'" matInput [formControlName]="field.id" [placeholder]="field.placeholder"></textarea>
+        <input *ngIf="field.type === 'text'" matInput [formControlName]="field.id" [placeholder]="field.placeholder" />
+        <mat-error *ngIf="dynamicForm.get(field.id)?.hasError('required')">This field is required</mat-error>
+      </mat-form-field>
+
+      <!-- Dropdown -->
+      <mat-form-field appearance="fill" *ngIf="field.type === 'dropdown'">
+        <mat-label>{{ field.label }}</mat-label>
+        <mat-select [formControlName]="field.id">
+          <mat-option *ngFor="let option of field.options" [value]="option">{{ option }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Radio -->
+      <div *ngIf="field.type === 'radio'">
+        <label>{{ field.label }}</label>
+        <mat-radio-group [formControlName]="field.id">
+          <mat-radio-button *ngFor="let option of field.options" [value]="option">{{ option }}</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <!-- Checkbox -->
+      <div *ngIf="field.type === 'checkbox'">
+        <label>{{ field.label }}</label>
+        <div *ngFor="let option of field.options">
+          <mat-checkbox>{{ option }}</mat-checkbox>
+        </div>
+      </div>
+    </div>
+
+    <button mat-raised-button color="accent" type="submit">Submit</button>
+  </form>
+</mat-card>
